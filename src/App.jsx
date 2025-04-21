@@ -18,7 +18,7 @@ const shortcutsGuide = [
   { key: 'Ctrl + Shift + C', action: 'Clear all inputs' },
   { key: 'Ctrl + Shift + H', action: 'Clear history' },
   { key: 'Ctrl + Shift + E', action: 'Load example command' },
-  { key: 'Ctrl + H', action: 'Toggle help section' },
+  { key: 'Ctrl + ?', action: 'Toggle help section' },
 ];
 
 function isOperator(token) {
@@ -134,7 +134,7 @@ export default function CommandLineValidator() {
           } else if (event.key === 'E' || event.key === 'e') {
             loadExample();
           }
-        } else if (event.key === 'H' || event.key === 'h') {
+        } else if (event.key === '?') {
           setShowHelp(!showHelp);
         }
       }
