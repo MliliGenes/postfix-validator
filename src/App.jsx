@@ -1,6 +1,5 @@
 import { useState } from 'react';
 
-// Enhanced operator definitions with CLI context
 const operators = {
   '||': { precedence: 1, description: 'OR (command separator)' },
   '&&': { precedence: 2, description: 'AND (conditional execution)' },
@@ -55,7 +54,7 @@ function shuntingYard(tokens) {
 }
 
 function tokenize(input) {
-  // Enhanced tokenizer that handles quoted commands and redirections
+  if (!input.trim()) return [];
   const regex = /"[^"]*"|'[^']*'|>>|2>|>|<|\|\||&&|;|\||\(|\)|\S+/g;
   return input.trim().match(regex) || [];
 }
@@ -70,6 +69,17 @@ export default function CommandLineValidator() {
   const validate = () => {
     const commandTokens = tokenize(command);
     const postfixTokens = tokenize(postfix);
+    
+    // Skip validation if either input is empty
+    if (commandTokens.length === 0 || postfixTokens.length === 0) {
+      setResult({
+        isValid: false,
+        error: 'Both command and postfix inputs must contain valid expressions',
+        timestamp: new Date().toLocaleTimeString()
+      });
+      return;
+    }
+
     const expected = shuntingYard(commandTokens);
 
     const isValid =
@@ -93,6 +103,10 @@ export default function CommandLineValidator() {
     setCommand('');
     setPostfix('');
     setResult(null);
+  };
+
+  const clearHistory = () => {
+    setHistory([]);
   };
 
   const loadExample = () => {
@@ -174,7 +188,7 @@ export default function CommandLineValidator() {
           </div>
 
           {/* Action Buttons */}
-          <div className="flex space-x-3">
+          <div className="flex flex-wrap gap-3">
             <button
               onClick={validate}
               className="bg-green-700 hover:bg-green-600 text-white px-4 py-2 rounded focus:outline-none focus:ring-1 focus:ring-green-500"
@@ -185,7 +199,13 @@ export default function CommandLineValidator() {
               onClick={clearAll}
               className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded focus:outline-none focus:ring-1 focus:ring-gray-500"
             >
-              Clear
+              Clear Inputs
+            </button>
+            <button
+              onClick={clearHistory}
+              className="bg-gray-700 hover:bg-gray-600 text-white px-4 py-2 rounded focus:outline-none focus:ring-1 focus:ring-gray-500"
+            >
+              Clear History
             </button>
             <button
               onClick={loadExample}
@@ -197,14 +217,21 @@ export default function CommandLineValidator() {
 
           {/* Current Result */}
           {result && (
-            <div className={`mt-4 p-3 rounded ${result.isValid ? 'bg-green-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'}`}>
+            <div className={`mt-4 p-3 rounded ${
+              result.isValid ? 'bg-green-900 bg-opacity-30' : 
+              result.error ? 'bg-yellow-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'
+            }`}>
               <div className="flex items-baseline">
                 <span className="text-gray-500 mr-2">$</span>
-                <span className={result.isValid ? 'text-green-400' : 'text-red-400'}>
-                  {result.isValid ? '✓ Valid postfix notation' : '✗ Invalid postfix notation'}
+                <span className={
+                  result.isValid ? 'text-green-400' : 
+                  result.error ? 'text-yellow-400' : 'text-red-400'
+                }>
+                  {result.isValid ? '✓ Valid postfix notation' : 
+                   result.error ? '⚠ ' + result.error : '✗ Invalid postfix notation'}
                 </span>
               </div>
-              {!result.isValid && (
+              {!result.isValid && !result.error && (
                 <div className="ml-4 mt-2 space-y-1">
                   <div>
                     <span className="text-gray-500">Command:</span> 
@@ -226,12 +253,22 @@ export default function CommandLineValidator() {
           {/* Validation History */}
           {history.length > 0 && (
             <div className="mt-6">
-              <div className="text-gray-500 text-sm mb-2">Validation History:</div>
+              <div className="flex justify-between items-center mb-2">
+                <div className="text-gray-500 text-sm">Validation History:</div>
+                <button 
+                  onClick={clearHistory}
+                  className="text-xs bg-gray-700 hover:bg-gray-600 px-2 py-1 rounded"
+                >
+                  Clear History
+                </button>
+              </div>
               <div className="space-y-3">
                 {history.map((item, index) => (
                   <div 
                     key={index} 
-                    className={`p-2 rounded border ${item.isValid ? 'border-green-800' : 'border-red-800'}`}
+                    className={`p-2 rounded border ${
+                      item.isValid ? 'border-green-800' : 'border-red-800'
+                    }`}
                   >
                     <div className="flex justify-between text-xs text-gray-500">
                       <span>{item.timestamp}</span>
