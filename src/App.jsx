@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useState, useEffect } from 'react';
 
 const operators = {
   '||': { precedence: 1, description: 'OR (command separator)' },
@@ -12,6 +12,14 @@ const operators = {
   '<': { precedence: 5, description: 'Input redirection' },
   '2>': { precedence: 5, description: 'Error redirection' },
 };
+
+const shortcutsGuide = [
+  { key: 'Ctrl + Enter', action: 'Validate command' },
+  { key: 'Ctrl + Shift + C', action: 'Clear all inputs' },
+  { key: 'Ctrl + Shift + H', action: 'Clear history' },
+  { key: 'Ctrl + Shift + E', action: 'Load example command' },
+  { key: 'Ctrl + H', action: 'Toggle help section' },
+];
 
 function isOperator(token) {
   return Object.keys(operators).includes(token);
@@ -70,12 +78,11 @@ export default function CommandLineValidator() {
     const commandTokens = tokenize(command);
     const postfixTokens = tokenize(postfix);
 
-    // Skip validation if either input is empty
     if (commandTokens.length === 0 || postfixTokens.length === 0) {
       setResult({
         isValid: false,
         error: 'Both command and postfix inputs must contain valid expressions',
-        timestamp: new Date().toLocaleTimeString()
+        timestamp: new Date().toLocaleTimeString(),
       });
       return;
     }
@@ -96,7 +103,7 @@ export default function CommandLineValidator() {
     };
 
     setResult(newResult);
-    setHistory([newResult, ...history].slice(0, 5)); // Keep last 5 results
+    setHistory([newResult, ...history].slice(0, 5));
   };
 
   const clearAll = () => {
@@ -113,6 +120,32 @@ export default function CommandLineValidator() {
     setCommand('struggle -status && grep "fate" destiny.log || echo "Free from destiny... for now."');
     setPostfix('struggle -status grep "fate" destiny.log && echo "Free from destiny... for now." ||');
   };
+
+  useEffect(() => {
+    const handleKeyDown = (event) => {
+      if (event.ctrlKey) {
+        if (event.key === 'Enter') {
+          validate();
+        } else if (event.shiftKey) {
+          if (event.key === 'C' || event.key === 'c') {
+            clearAll();
+          } else if (event.key === 'H' || event.key === 'h') {
+            clearHistory();
+          } else if (event.key === 'E' || event.key === 'e') {
+            loadExample();
+          }
+        } else if (event.key === 'H' || event.key === 'h') {
+          setShowHelp(!showHelp);
+        }
+      }
+    };
+
+    window.addEventListener('keydown', handleKeyDown);
+
+    return () => {
+      window.removeEventListener('keydown', handleKeyDown);
+    };
+  }, [validate, clearAll, clearHistory, loadExample, showHelp, setShowHelp]);
 
   return (
     <div className="min-h-screen bg-gray-900 text-green-400 font-mono p-4 sm:p-6 md:p-8 font-fira-code">
@@ -159,6 +192,16 @@ export default function CommandLineValidator() {
               <h3 className="font-bold text-white sm:text-md">Examples:</h3>
               <p className="text-gray-300">Infix: <span className="text-green-300">cmd1 && cmd2 || cmd3</span></p>
               <p className="text-gray-300">Postfix: <span className="text-green-300">cmd1 cmd2 && cmd3 ||</span></p>
+            </div>
+            <div className="mt-3 text-sm">
+              <h3 className="font-bold text-white sm:text-md">Shortcuts:</h3>
+              <ul className="list-disc pl-5 text-gray-300">
+                {shortcutsGuide.map((shortcut) => (
+                  <li key={shortcut.key}>
+                    <span className="text-yellow-300">{shortcut.key}</span>: {shortcut.action}
+                  </li>
+                ))}
+              </ul>
             </div>
           </div>
         )}
@@ -222,19 +265,21 @@ export default function CommandLineValidator() {
               Example
             </button>
           </div>
+
           {/* Current Result */}
           {result && (
-            <div className={`mt-4 p-3 rounded text-sm sm:text-md font-fira-code ${result.isValid ? 'bg-green-900 bg-opacity-30' :
-                result.error ? 'bg-yellow-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'
-              }`}>
+            <div className={`mt-4 p-3 rounded text-sm sm:text-md font-fira-code ${
+              result.isValid ? 'bg-green-900 bg-opacity-30' :
+              result.error ? 'bg-yellow-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'
+            }`}>
               <div className="flex items-baseline">
                 <span className="text-gray-500 mr-2">$</span>
                 <span className={
                   result.isValid ? 'text-green-400' :
-                    result.error ? 'text-yellow-400' : 'text-red-400'
+                  result.error ? 'text-yellow-400' : 'text-red-400'
                 }>
                   {result.isValid ? '✓ Valid postfix notation' :
-                    result.error ? '⚠ ' + result.error : '✗ Invalid postfix notation'}
+                   result.error ? '⚠ ' + result.error : '✗ Invalid postfix notation'}
                 </span>
               </div>
               {!result.isValid && !result.error && (
@@ -272,8 +317,9 @@ export default function CommandLineValidator() {
                 {history.map((item, index) => (
                   <div
                     key={index}
-                    className={`p-2 rounded border text-xs sm:text-sm font-fira-code ${item.isValid ? 'border-green-800' : 'border-red-800'
-                      }`}
+                    className={`p-2 rounded border text-xs sm:text-sm font-fira-code ${
+                      item.isValid ? 'border-green-800' : 'border-red-800'
+                    }`}
                   >
                     <div className="flex justify-between text-gray-500">
                       <span>{item.timestamp}</span>
