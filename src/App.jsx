@@ -248,13 +248,13 @@ export default function CommandLineValidator() {
             </button>
             <button
               onClick={clearAll}
-              className="border border-gray-500 text-gray-400 hover:bg-gray-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 text-xs sm:text-sm"
+              className="border border-orange-500 text-orange-400 hover:bg-orange-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-orange-500 text-xs sm:text-sm"
             >
               Clear
             </button>
             <button
               onClick={clearHistory}
-              className="border border-gray-500 text-gray-400 hover:bg-gray-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 text-xs sm:text-sm"
+              className="border border-red-500 text-red-400 hover:bg-red-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-red-500 text-xs sm:text-sm"
             >
               Clear History
             </button>
