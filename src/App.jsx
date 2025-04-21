@@ -61,7 +61,7 @@ function tokenize(input) {
 
 export default function CommandLineValidator() {
   const [command, setCommand] = useState('struggle -status && grep "fate" destiny.log || echo "Free from destiny... for now."');
-  const [postfix, setPostfix] = useState('');
+  const [postfix, setPostfix] = useState('struggle -status grep "fate" destiny.log && echo "Free from destiny... for now." ||');
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [showHelp, setShowHelp] = useState(false);
