@@ -15,7 +15,7 @@ const operators = {
 
 const shortcutsGuide = [
   { key: 'Ctrl + Enter', action: 'Validate command' },
-  { key: 'Ctrl + Shift + C', action: 'Clear all inputs' },
+  { key: 'Ctrl + Shift + X', action: 'Clear all inputs' },
   { key: 'Ctrl + Shift + H', action: 'Clear history' },
   { key: 'Ctrl + Shift + E', action: 'Load example command' },
   { key: 'Ctrl + Space', action: 'Toggle help section' },
@@ -127,7 +127,7 @@ export default function CommandLineValidator() {
         if (event.key === 'Enter') {
           validate();
         } else if (event.shiftKey) {
-          if (event.key === 'C' || event.key === 'c') {
+          if (event.key === 'X' || event.key === 'x') {
             clearAll();
           } else if (event.key === 'H' || event.key === 'h') {
             clearHistory();
