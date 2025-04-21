@@ -60,8 +60,8 @@ function tokenize(input) {
 }
 
 export default function CommandLineValidator() {
-  const [command, setCommand] = useState('struggle -status && grep "fate" destiny.log || echo "Free from destiny... for now."');
-  const [postfix, setPostfix] = useState('struggle -status grep "fate" destiny.log && echo "Free from destiny... for now." ||');
+  const [command, setCommand] = useState('');
+  const [postfix, setPostfix] = useState('');
   const [result, setResult] = useState(null);
   const [history, setHistory] = useState([]);
   const [showHelp, setShowHelp] = useState(false);
@@ -110,8 +110,8 @@ export default function CommandLineValidator() {
   };
 
   const loadExample = () => {
-    setCommand('cat file.txt | grep "important" > results.txt && echo "Done"');
-    setPostfix('cat file.txt grep "important" | results.txt > echo "Done" &&');
+    setCommand('struggle -status && grep "fate" destiny.log || echo "Free from destiny... for now."');
+    setPostfix('struggle -status grep "fate" destiny.log && echo "Free from destiny... for now." ||');
   };
 
   return (
