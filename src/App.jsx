@@ -148,7 +148,7 @@ export default function CommandLineValidator() {
           <div className="bg-gray-800 p-4 border-b border-green-500">
             <h2 className="font-bold mb-2 text-white sm:text-lg">Command Line Operators</h2>
             <div className="grid grid-cols-2 gap-2 text-sm sm:grid-cols-3">
-              {Object.entries(operators).map(([op, {description}]) => (
+              {Object.entries(operators).map(([op, { description }]) => (
                 <div key={op} className="flex items-center">
                   <span className="text-yellow-300 w-12">{op}</span>
                   <span className="text-gray-300">{description}</span>
@@ -199,44 +199,42 @@ export default function CommandLineValidator() {
           <div className="flex flex-wrap gap-2">
             <button
               onClick={validate}
-              className="bg-green-700 hover:bg-green-600 text-white px-3 py-1 rounded focus:outline-none focus:ring-1 focus:ring-green-500 text-xs sm:text-sm"
+              className="border border-green-500 text-green-400 hover:bg-green-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-green-500 text-xs sm:text-sm"
             >
               Validate
             </button>
             <button
               onClick={clearAll}
-              className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded focus:outline-none focus:ring-1 focus:ring-gray-500 text-xs sm:text-sm"
+              className="border border-gray-500 text-gray-400 hover:bg-gray-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 text-xs sm:text-sm"
             >
               Clear
             </button>
             <button
               onClick={clearHistory}
-              className="bg-gray-700 hover:bg-gray-600 text-white px-3 py-1 rounded focus:outline-none focus:ring-1 focus:ring-gray-500 text-xs sm:text-sm"
+              className="border border-gray-500 text-gray-400 hover:bg-gray-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-gray-500 text-xs sm:text-sm"
             >
               Clear History
             </button>
             <button
               onClick={loadExample}
-              className="bg-blue-700 hover:bg-blue-600 text-white px-3 py-1 rounded focus:outline-none focus:ring-1 focus:ring-blue-500 text-xs sm:text-sm"
+              className="border border-blue-500 text-blue-400 hover:bg-blue-800 px-3 py-1 rounded focus:outline-none focus:ring-2 focus:ring-blue-500 text-xs sm:text-sm"
             >
               Example
             </button>
           </div>
-
           {/* Current Result */}
           {result && (
-            <div className={`mt-4 p-3 rounded text-sm sm:text-md font-fira-code ${
-              result.isValid ? 'bg-green-900 bg-opacity-30' :
-              result.error ? 'bg-yellow-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'
-            }`}>
+            <div className={`mt-4 p-3 rounded text-sm sm:text-md font-fira-code ${result.isValid ? 'bg-green-900 bg-opacity-30' :
+                result.error ? 'bg-yellow-900 bg-opacity-30' : 'bg-red-900 bg-opacity-30'
+              }`}>
               <div className="flex items-baseline">
                 <span className="text-gray-500 mr-2">$</span>
                 <span className={
                   result.isValid ? 'text-green-400' :
-                  result.error ? 'text-yellow-400' : 'text-red-400'
+                    result.error ? 'text-yellow-400' : 'text-red-400'
                 }>
                   {result.isValid ? '✓ Valid postfix notation' :
-                   result.error ? '⚠ ' + result.error : '✗ Invalid postfix notation'}
+                    result.error ? '⚠ ' + result.error : '✗ Invalid postfix notation'}
                 </span>
               </div>
               {!result.isValid && !result.error && (
@@ -274,9 +272,8 @@ export default function CommandLineValidator() {
                 {history.map((item, index) => (
                   <div
                     key={index}
-                    className={`p-2 rounded border text-xs sm:text-sm font-fira-code ${
-                      item.isValid ? 'border-green-800' : 'border-red-800'
-                    }`}
+                    className={`p-2 rounded border text-xs sm:text-sm font-fira-code ${item.isValid ? 'border-green-800' : 'border-red-800'
+                      }`}
                   >
                     <div className="flex justify-between text-gray-500">
                       <span>{item.timestamp}</span>
